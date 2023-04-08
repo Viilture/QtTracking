@@ -1,0 +1,40 @@
+#ifndef TRACKINGCONTROL_H
+#define TRACKINGCONTROL_H
+
+#include <QObject>
+#include <QRect>
+
+#include <opencv2/tracking.hpp>
+#include <opencv2/tracking/tracking_legacy.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+
+class TrackingWrapper: public QObject
+{
+    Q_OBJECT
+public:
+    explicit TrackingWrapper(QObject* parent);
+    virtual ~TrackingWrapper();
+
+private:
+
+    void initTracker();
+    cv::Mat* curImage = nullptr;
+    cv::Rect curRect;
+
+    cv::Ptr<cv::Tracker> tracker = nullptr;
+
+public slots:
+
+    //Обновляем значение текущей картинки и выбранного места поиска у трекера
+    void initTracker(cv::Mat* newImage, QRect newRect);
+
+    void updateTracker(cv::Mat* newImage);
+
+signals:
+
+    void newRect(QRect newRect);
+};
+
+#endif // TRACKINGCONTROL_H
